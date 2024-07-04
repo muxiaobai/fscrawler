@@ -50,7 +50,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -121,8 +120,7 @@ public class DocumentApi extends RestApi {
             String id = formId != null ? formId : headerId != null ? headerId : queryParamId;
             String index = formIndex != null ? formIndex : headerIndex != null ? headerIndex : queryParamIndex;
 
-            String filename = new String(fileName.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            UploadResponse uploadResponse = uploadToDocumentService(debug, simulate, id, index, null, in, filename
+            UploadResponse uploadResponse = uploadToDocumentService(debug, simulate, id, index, null, in, fileName
                     , fileSize);
             uploadResponse.getDoc().getFile().setFilesize(fileSize);
             uploadResponse.getDoc().getFile().setFilename(fileName);
@@ -358,8 +356,8 @@ public class DocumentApi extends RestApi {
             response.setMessage("No file has been sent or you are not using [file] as the field name.");
             return response;
         }
-
-        String filename = new String(d.getFileName().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        logger.warn("fileName:{}",d.getFileName());
+        String filename = d.getFileName();
         long filesize = d.getSize();
 
         // File
